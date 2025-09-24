@@ -1,4 +1,6 @@
-﻿using IssueTracker.API.Models;
+﻿using IssueTracker.API.Interfaces;
+using IssueTracker.API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,79 +10,79 @@ namespace IssueTracker.API.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private static List<Category> _categories = new List<Category>
+        private readonly ICategoryService _categoryService;
+
+        public CategoriesController(ICategoryService categoryService)
         {
-            new Category { Id = 1, CategoryName = "Electronics" },
-            new Category { Id = 2, CategoryName = "Books" }
-        };
+            _categoryService = categoryService;
+        }
 
         // GET: /api/category
         [HttpGet]
-        public IActionResult GetAllCategories()
+        public async Task<IActionResult> GetAllCategories()
         {
-            return Ok(_categories);
+            var categories = await _categoryService.GetAllCategoriesAsync();
+            return Ok(categories);
         }
 
         // GET: /api/category/{id}
         [HttpGet("{id}")]
-        public IActionResult GetCategoryById(int id)
+        public async Task<IActionResult> GetCategoryById(int id)
         {
-            var category = _categories.FirstOrDefault(c => c.Id == id);
+            var category = await _categoryService.GetCategoryByIdAsync(id);
             if (category == null)
             {
                 return NotFound($"Category with ID = {id} not found.");
             }
 
             return Ok(category);
+
         }
 
+
+        // POST: /api/category
         [HttpPost]
-        public IActionResult CreateCategory([FromBody] Category newCategory)
+        public async Task<IActionResult> CreateCategory([FromBody] Category newCategory)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            // Generate new ID
-            newCategory.Id = _categories.Count + 1;
-            _categories.Add(newCategory);
+            var category = await _categoryService.CreateCategoryAsync(newCategory);
 
-            return CreatedAtAction(nameof(GetCategoryById), new { id = newCategory.Id },
-                 $"New category '{newCategory.CategoryName}' created with ID = {newCategory.Id}");
+
+            return CreatedAtAction(nameof(GetCategoryById), new { id = category.Id },
+                  $"New category '{category.CategoryName}' created with ID = {category.Id}");
         }
+
 
         // PUT: /api/category/{id}
         [HttpPut("{id}")]
-        public IActionResult UpdateCategory(int id, [FromBody] Category updatedCategory)
+        public async Task<IActionResult> UpdateCategory(int id, [FromBody] Category updatedCategory)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var category = _categories.FirstOrDefault(c => c.Id == id);
-            if (category == null)
-            {
+            var updated = await _categoryService.UpdateCategoryAsync(id, updatedCategory);
+            if (updated == null)
                 return NotFound($"Category with ID = {id} not found.");
-            }
-            category.CategoryName = updatedCategory.CategoryName;
 
-            return Ok($"Category with ID = {id} updated to '{updatedCategory.CategoryName}'");
+
+            return Ok($"Category with ID = {id} updated to '{updated.CategoryName}'");
         }
+
+
 
         // DELETE: /api/category/{id}
         [HttpDelete("{id}")]
-        public IActionResult DeleteCategory(int id)
+        public async Task<IActionResult> DeleteCategory(int id)
         {
-            var category = _categories.FirstOrDefault(c => c.Id == id);
-            if (category == null)
-            {
+            var success = await _categoryService.DeleteCategoryAsync(id);
+            if (!success)
                 return NotFound($"Category with ID = {id} not found.");
-            }
 
-            _categories.Remove(category);
 
-            return Ok($"Category with ID = {id} deleted.");
+            return Ok($"Category with ID = {id} deleted");
         }
-
-
 
 
     }
