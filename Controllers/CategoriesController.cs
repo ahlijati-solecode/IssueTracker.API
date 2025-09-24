@@ -34,7 +34,6 @@ namespace IssueTracker.API.Controllers
             return Ok(category);
         }
 
-
         [HttpPost]
         public IActionResult CreateCategory([FromBody] Category newCategory)
         {
@@ -45,15 +44,13 @@ namespace IssueTracker.API.Controllers
             newCategory.Id = _categories.Count + 1;
             _categories.Add(newCategory);
 
-            return CreatedAtAction(nameof(GetCategoryById),
-                                 new { id = newCategory.Id },
+            return CreatedAtAction(nameof(GetCategoryById), new { id = newCategory.Id },
                  $"New category '{newCategory.CategoryName}' created with ID = {newCategory.Id}");
         }
 
         // PUT: /api/category/{id}
         [HttpPut("{id}")]
-        public IActionResult UpdateCategory(int id,
-                                           [FromBody] Category updatedCategory)
+        public IActionResult UpdateCategory(int id, [FromBody] Category updatedCategory)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
