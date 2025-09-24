@@ -64,7 +64,7 @@ namespace IssueTracker.API.Controllers
             }
             project.Name = updatedProject.Name;
             project.Description = updatedProject.Description;
-           
+
             return Ok($"Project with ID = {id} updated to '{updatedProject.Name}'");
 
         }

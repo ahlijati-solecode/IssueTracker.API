@@ -9,15 +9,19 @@ namespace IssueTracker.API.Models
         [Key]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Project Name harus diisi")]
         [StringLength(100, ErrorMessage = "Panjang max 100")]
+        [Required(ErrorMessage = "Project Name harus diisi")]
         public string Name { get; set; }
 
+
         [StringLength(500, ErrorMessage = "Panjang max 500")]
-        [Required(ErrorMessage = "Decription harus diisi")]
         public string? Description { get; set; }
+
+
         [Required(ErrorMessage = "Date Time harus diisi")]
         public DateTime CreatedDate { get; set; }
+
+
         [Required(ErrorMessage = "Created By User ID harus diisi")]
         public string CreatedByUserId { get; set; }
 
