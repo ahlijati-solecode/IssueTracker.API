@@ -11,8 +11,8 @@ namespace IssueTracker.API.Controllers
     {
         private static List<Issue> _issues = new List<Issue>
         {
-            new Issue { id = 1, Title = "Menu Bugs", Status = "Active", Priority = "Major" },
-            new Issue { id = 2, Title = "Upload Bugs", Status = "Active", Priority = "Minor" },
+            new Issue { id = 1, Title = "Menu Bugs", Description = "menu bugs description", Status = "Active", Priority = "Major", ProjectId = 1, AssignedToUserId = "Dzaki", CreatedDate = DateTime.Now },
+            new Issue { id = 2, Title = "Upload Bugs", Description = "upload bugs description", Status = "Active", Priority = "Minor", ProjectId = 1, AssignedToUserId = "Lisdiana", CreatedDate = DateTime.Now },
         };
 
         [HttpGet]
@@ -63,9 +63,15 @@ namespace IssueTracker.API.Controllers
             {
                 return NotFound($"Issue with ID = {id} not found.");
             }
+            
+            issue.id = updateIssue.id;
             issue.Title = updateIssue.Title;
+            issue.Description = updateIssue.Description;
             issue.Status = updateIssue.Status;
             issue.Priority = updateIssue.Priority;
+            issue.ProjectId = updateIssue.ProjectId;
+            issue.AssignedToUserId = updateIssue.AssignedToUserId;
+            issue.CreatedDate = updateIssue.CreatedDate;
 
             return Ok(issue);
 
