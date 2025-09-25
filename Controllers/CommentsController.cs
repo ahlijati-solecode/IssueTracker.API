@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using IssueTracker.API.Interface;
+using IssueTracker.API.Interfaces;
 using IssueTracker.API.Models;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -10,41 +13,50 @@ namespace IssueTracker.API.Controllers
 
     public class CommentsController : ControllerBase
     {
-        private static List<Comment> _comments = new List<Comment>
+        private readonly ICommentService _CommentService;
+
+        public CommentsController(ICommentService commentService)
         {
-            new Comment { Id=1, IssueId =1, UserId = "8248", Content = "Komentar 1", CreatedDate= DateTime.Now}
-        };
+            _CommentService = commentService;
+        }
+
+        /*
+         private static List<Comment> _comments = new List<Comment>
+         {
+             new Comment { Id=1, IssueId =1, UserId = "8248", Content = "Komentar 1", CreatedDate= DateTime.Now}
+         };
+        */
 
         // GET api/<AllComments>
         [HttpGet]
-        public IActionResult GetAllComments()
+        public async Task<IActionResult> GetAllComments()
         {
+            var _comments = await _CommentService.GetAllAsync();
             return Ok(_comments);
         }
 
         // GET api/<Comments>/5
         [HttpGet("{id}")]
-        public IActionResult GetCommentById(int id)
+        public async Task<IActionResult> GetCommentById(int id)
         {
-            var Comment = _comments.FirstOrDefault(x => x.Id == id);
-            if (Comment == null)
+            var Comments = await _CommentService.GetCommentByIdAsync(id);
+            if (Comments == null)
             {
                 return NotFound($"Comment with ID = {id} not found.");
             }
 
-            return Ok(Comment);
+            return Ok(Comments);
         }
 
         // POST api/<Comments>
         [HttpPost]
-        public IActionResult CreateComment([FromBody] Comment newComment)
+        public async Task<IActionResult> CreateComment([FromBody] Comment newComment)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             // Generate new ID
-            newComment.Id = _comments.Count + 1;
-            _comments.Add(newComment);
+            var comment = await _CommentService.CreateAsync(newComment);
 
             return CreatedAtAction(nameof(GetCommentById), new { id = newComment.Id },
                 $"New Comments '{newComment.Issue}' created with ID = {newComment.Id}");
@@ -52,35 +64,25 @@ namespace IssueTracker.API.Controllers
 
         // PUT api/<Comments>/5
         [HttpPut("{id}")]
-        public IActionResult UpdateComment(int id, [FromBody] Comment UpdateComment)
+        public async Task<IActionResult> UpdateComment(int id, [FromBody] Comment UpdateComment)
         {
-            if (string.IsNullOrWhiteSpace(UpdateComment.Content))
-            {
-                return BadRequest("Category Name Cannot be Empty");
-            }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var newComment = _comments.FirstOrDefault(c => c.Id == id);
-            if (newComment == null)
-            {
-                return NotFound($"Comment with id = {id} not found.");
-            }
-            newComment.Content = UpdateComment.Content;
-            return Ok($"Comments with {id} updated");
+            var updated = await _CommentService.UpdateAsync(id, UpdateComment);
+
+            if (updated == null) return NotFound($"Comments with ID = {id} not found");
+
+            return Ok(updated);
         }
 
         // DELETE api/<Comments>/5
         [HttpDelete("{id}")]
-        public IActionResult DeleteComment(int id)
+        public async Task<IActionResult> DeleteComment(int id)
         {
-            var Comment = _comments.FirstOrDefault(c => c.Id == id);
-            if (Comment == null)
-            {
-                return NotFound($"Comments with ID = {id} Not Found. ");
-            }
+            var success = await _CommentService.DeleteAsync(id);
+            if (!success) return NotFound($"Comments with ID = {id} not found");
 
-            _comments.Remove(Comment);
-
-            return Ok($"Comments with {id} deleted");
+            return Ok($"Comments with ID = {id} deleted");
         }
     }
 }
