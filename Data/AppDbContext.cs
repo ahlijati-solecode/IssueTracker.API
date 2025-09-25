@@ -19,6 +19,9 @@ namespace IssueTracker.API.Data
         }
 
         public DbSet<Category> Categories { get; set; } // Table "Categories"
+        public DbSet<Project> Projects { get; set; } // Table "Projects"
+        public DbSet<Issue> Issues { get; set; } // Table "Issues"
+        public DbSet<Comment> Comments { get; set; } // Table "Comments"
     }
 
 }
