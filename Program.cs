@@ -1,5 +1,4 @@
 using IssueTracker.API.Data;
-using IssueTracker.API.Interface;
 using IssueTracker.API.Interfaces;
 using IssueTracker.API.Services;
 using Microsoft.EntityFrameworkCore;

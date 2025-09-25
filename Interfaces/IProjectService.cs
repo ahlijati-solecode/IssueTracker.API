@@ -1,6 +1,6 @@
 ﻿using IssueTracker.API.Models;
 
-namespace IssueTracker.API.Interface
+namespace IssueTracker.API.Interfaces
 {
     public interface IProjectService
     {
