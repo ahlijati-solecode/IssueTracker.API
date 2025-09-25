@@ -1,5 +1,7 @@
-﻿using IssueTracker.API.Models;
+﻿using IssueTracker.API.Interface;
+using IssueTracker.API.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -9,25 +11,34 @@ namespace IssueTracker.API.Controllers
     [ApiController]
     public class ProjectsController : ControllerBase
     {
+        private readonly IProjectService _projectService;
+
+        public ProjectsController(IProjectService projectService)
+        {
+            _projectService = projectService;
+        }
+
+        /*
         private static List<Project> _projects = new List<Project>
         {
             new Project{Id =1, Name="ERM", CreatedDate=DateTime.Now, CreatedByUserId="Lis"},
             new Project{Id =2, Name="MAPS", CreatedDate=DateTime.Now, CreatedByUserId="Dzaki"}
 
-        };
+        }; */
 
         // GET: api/<ProjectsController>
         [HttpGet]
-        public IActionResult GetAllProjects()
+        public async Task<IActionResult> GetAllProjects()
         {
+            var _projects = await _projectService.GetProjectsAsync();
             return Ok(_projects); //200 OK + category list
         }
 
         // GET api/<ProjectsController>/5
         [HttpGet("{id}")]
-        public IActionResult GetProjectById(int id)
+        public async Task<IActionResult> GetProjectById(int id)
         {
-            var project = _projects.FirstOrDefault(c => c.Id == id);
+            var project = await _projectService.GetByIdAsync(id);
             if (project == null)
             {
                 return NotFound($"Category with ID ={id} not found");
@@ -37,14 +48,12 @@ namespace IssueTracker.API.Controllers
 
         // POST api/<ProjectsController>
         [HttpPost]
-        public IActionResult CreateProject([FromBody] Project newProject)
+        public async Task<IActionResult> CreateProject([FromBody] Project newProject)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            //Generate new ID
-            newProject.Id = _projects.Count + 1;
-            _projects.Add(newProject);
+            var project = await _projectService.CreateAsync(newProject);
 
             return CreatedAtAction(nameof(GetProjectById), new { id = newProject.Id },
                  $"New project '{newProject.Name}' created with ID ={newProject.Id}");
@@ -53,11 +62,11 @@ namespace IssueTracker.API.Controllers
 
         // PUT api/<ProjectsController>/5
         [HttpPut("{id}")]
-        public IActionResult UpdateProject(int id, [FromBody] Project updatedProject)
+        public async Task<IActionResult> UpdateProject(int id, [FromBody] Project updatedProject)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            var project = _projects.FirstOrDefault(c => c.Id == id);
+            var project = await _projectService.UpdateAsync(id, updatedProject);
             if (project == null)
             {
                 return NotFound($"Project with ID ={id} not found");
@@ -73,14 +82,13 @@ namespace IssueTracker.API.Controllers
 
         // DELETE api/<ProjectsController>/5
         [HttpDelete("{id}")]
-        public IActionResult DeleteProject(int id)
+        public async Task<IActionResult> DeleteProject(int id)
         {
-            var project = _projects.FirstOrDefault(c => c.Id == id);
-            if (project == null)
+            var project = await _projectService.DeleteAsync(id);
+            if (project == false)
             {
                 return NotFound($"Project with ID ={id} not found");
             }
-            _projects.Remove(project);
             return Ok($"Project with ID {id} deleted");
         }
     }

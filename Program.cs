@@ -1,4 +1,5 @@
 using IssueTracker.API.Data;
+using IssueTracker.API.Interface;
 using IssueTracker.API.Interfaces;
 using IssueTracker.API.Services;
 using Microsoft.EntityFrameworkCore;
@@ -16,11 +17,9 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AppDbContext>(options =>
   options.UseSqlServer(connectionString));
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-  options.UseSqlServer(connectionString));
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IIssueService, IssueService>();
-
+builder.Services.AddScoped<IProjectService, ProjectService>();
 
 
 var app = builder.Build();
