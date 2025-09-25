@@ -1,11 +1,12 @@
 ﻿using IssueTracker.API.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 
 namespace IssueTracker.API.Data
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<IdentityUser>
     {
         //Constructor calling the Base DbContext Class Constructor
         public AppDbContext(DbContextOptions<AppDbContext> options) :

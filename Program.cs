@@ -21,6 +21,7 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IIssueService, IssueService>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
