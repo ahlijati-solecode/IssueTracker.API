@@ -51,7 +51,7 @@ namespace IssueTracker.API.Controllers
 
             // Ambil role user
             var roles = await _userManager.GetRolesAsync(user);
-            var role = roles.FirstOrDefault() ?? "Employee";
+            var role = roles.FirstOrDefault() ?? "Developer";
 
             return Ok(new
             {
@@ -60,8 +60,6 @@ namespace IssueTracker.API.Controllers
                 Role = role,
                 Message = "Login successful (cookie created)"
             });
-
-
         }
 
         [HttpPost("logout")]
