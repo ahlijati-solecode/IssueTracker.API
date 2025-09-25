@@ -19,6 +19,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddDbContext<AppDbContext>(options =>
   options.UseSqlServer(connectionString));
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IIssueService, IssueService>();
 
 
 
