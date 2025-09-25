@@ -37,7 +37,7 @@ namespace IssueTracker.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("IssueTracker.API.Models.Comment", b =>
@@ -67,7 +67,7 @@ namespace IssueTracker.API.Migrations
 
                     b.HasIndex("IssueId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comments", (string)null);
                 });
 
             modelBuilder.Entity("IssueTracker.API.Models.Issue", b =>
@@ -109,7 +109,7 @@ namespace IssueTracker.API.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("Issues");
+                    b.ToTable("Issues", (string)null);
                 });
 
             modelBuilder.Entity("IssueTracker.API.Models.Project", b =>
@@ -138,7 +138,7 @@ namespace IssueTracker.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Projects");
+                    b.ToTable("Projects", (string)null);
                 });
 
             modelBuilder.Entity("IssueTracker.API.Models.Comment", b =>

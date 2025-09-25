@@ -1,4 +1,4 @@
-﻿using IssueTracker.API.Interface;
+﻿using IssueTracker.API.Interfaces;
 using IssueTracker.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
