@@ -21,7 +21,7 @@ namespace IssueTracker.API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(string email, string password)
+        public async Task<IActionResult> Register(string email, string password, string role)
         {
             var result = await _authService.RegisterAsync(email, password);
             if (result)
@@ -29,7 +29,7 @@ namespace IssueTracker.API.Controllers
                 var user = await _userManager.FindByNameAsync(email);
                 if (user != null)
                 {
-                    await _userManager.AddToRoleAsync(user, "Manager");
+                    await _userManager.AddToRoleAsync(user, role);
                 }
 
                 return Ok("User registered successfully");
