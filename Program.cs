@@ -35,6 +35,20 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     .AddRoles<IdentityRole>()
     .AddDefaultTokenProviders();
 
+// Add CORS service
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5166") 
+                  .AllowAnyHeader()
+                  .AllowAnyOrigin()
+                  .AllowAnyMethod();
+
+        });
+});
+
 
 var app = builder.Build();
 
@@ -46,6 +60,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("AllowSpecificOrigin");
 
 app.UseAuthentication();
 app.UseAuthorization();
