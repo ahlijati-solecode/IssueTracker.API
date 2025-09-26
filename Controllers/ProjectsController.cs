@@ -43,7 +43,7 @@ namespace IssueTracker.API.Controllers
             {
                 return NotFound($"Category with ID ={id} not found");
             }
-            return Ok($"Details of project with ID = {id}"); //200 OK + category
+            return Ok(project); //200 OK + category
         }
 
         // POST api/<ProjectsController>
