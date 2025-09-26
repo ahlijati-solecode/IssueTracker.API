@@ -34,7 +34,7 @@ namespace IssueTracker.API.Services
 
         public async Task<List<Comment>> GetAllAsync()
         {
-            return await _context.Comments.ToListAsync();
+            return await _context.Comments.Include(dm => dm.Issue).ToListAsync();
         }
 
         public async Task<Comment?> GetCommentByIdAsync(int Id)

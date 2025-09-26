@@ -40,7 +40,7 @@ namespace IssueTracker.API.Services
 
         public async Task<List<Issue>> GetIssuesAsync()
         {
-            return await _context.Issues.ToListAsync();
+            return await _context.Issues.Include(dm => dm.Project).ToListAsync();
         }
 
         public async Task<Issue?> UpdateAsync(int id, Issue issue)
